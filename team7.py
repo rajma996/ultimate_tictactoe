@@ -55,8 +55,16 @@ class player7:
 
             return cell_list;
 
+
     	def move(self, temp_board, temp_block, old_move, flag):
 
             allowed_block_list = get_block_list(old_move);
 
-            get_cell_list(allowed_block_list,temp_board,temp_block)
+            allowed_cell_list = get_cell_list(allowed_block_list,temp_board,temp_block)
+
+		    #return allowed_cell_list[random.randrange(len(allowed_cell_list))]
+
+            return allowed_cell_list ''' return the complete list temprorarily for testing   '''
+
+
+if __name__ == '__main__': ''' add test cases here '''
