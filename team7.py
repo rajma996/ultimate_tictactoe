@@ -1,8 +1,8 @@
 ''' put everything in the class player7
 first we find out which cells are valid '''
 
-
-class player7:
+import random
+class Player7:
 
 	def __init__(self):
 		''' Variables Declared Here '''
@@ -46,8 +46,9 @@ class player7:
 
 	    cell_list = []
             for i in range(len(allowed_block_list)) :
-                    #if block[allowed_block_list[i]] != '-' : # the block is already won so we cannot move in that block
-                        #continue
+                print block[allowed_block_list[i]]
+                if block[allowed_block_list[i]] != '-' : # the block is already won so we cannot move in that block
+                    continue
 
                 add_j = allowed_block_list[i]/3  # value to be added to first numbers from pairs  0,0 to 2,2 to get to block list
                 add_k = allowed_block_list[i]%3  # value to be added to second numbers from pairs  0,0 to 2,2 to get to block list
@@ -56,14 +57,15 @@ class player7:
                         j_temp = j+add_j*3
                         k_temp = k+add_k*3    # j and k will give all elements of a given block
 
-                        if(board[j][k]=='-') :  # if the cell is empty
-                         cell_list.append( [j_temp,k_temp] )
+                        if(board[j_temp][k_temp]=='-') :  # if the cell is empty
+                         cell_list.append( (j_temp,k_temp) )
 
             if len(cell_list) == 0 : #we have a free move
-                 for j in len(8) :
-                    for k in len(8) :
-                        if(board[j][k] == '-') :  # If the cell is empty
-                            cell_list.append([j,k])
+                 
+                 for j in range(9) :
+                    for k in range(9) :
+                        if board[j][k] == '-' and block[(j/3)*3+k/3] == '-' :  # If the cell is empty
+                            cell_list.append((j,k))
             return cell_list
 
 
@@ -74,12 +76,13 @@ class player7:
 		allowed_cell_list = self.get_cell_list(allowed_block_list,board,block)
 
 		#return allowed_cell_list[random.randrange(len(allowed_cell_list))]
+                a =  allowed_cell_list[random.randrange(len(allowed_cell_list))]
+                return a
 
-		return allowed_cell_list  # Return the complete list temprorarily for testing
 
 
 
-if __name__ == '__main__':  # add test cases here
+'''if __name__ == '__main__':  # add test cases here
 
     old_move = [-1 , -1]
     flag = 'x'
@@ -92,9 +95,13 @@ if __name__ == '__main__':  # add test cases here
         for j in range(9) :
             temp_list.append('-')
         board.append(temp_list)
+
+    board[3][3]='o'
+    old_move = [3 , 3]
+
     for i in range(9) :
         block.append('-')
 	p = player7()
 	temp_l = p.move(board,block,old_move,flag)
 
-    print p,temp_l
+    print temp_l '''
