@@ -1,5 +1,8 @@
 ''' put everything in the class player7
 first we find out which cells are valid '''
+''' The next step is to make the update function which will update 
+    the block state given an old move as we will surely require it 
+    while traversing it on the minimax tree'''
 
 import random
 class Player7:
