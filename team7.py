@@ -76,7 +76,7 @@ class Player7:
             return ((old_move[0]/3)*3+old_move[1]/3) 
 
         
-        def get_cell_list(self,block_number):  #retruns the 9 cells within a block tested and works fine 
+        def get_cell_list_from_block(self,block_number):  #retruns the 9 cells within a block tested and works fine 
             cell_list = []
             add_j = block_number/3  # value to be added to first numbers from pairs  0,0 to 2,2 to get to block list
             add_k = block_number%3  # value to be added to second numbers from pairs  0,0 to 2,2 to get to block list
