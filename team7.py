@@ -87,9 +87,26 @@ class Player7:
                     cell_list.append([j_temp,k_temp])
             return cell_list
 
+        def update_block_list(self,old_move,board,block,flag):
+            block_number = self.get_block_number(old_move)
+            cell_list = self.get_cell_list_from_block(block_number) # Get All cells in the block where last move was played
+            if(block[block_number] == '-'):
+                    for a in range(0,9,3):
+                        if board[cell_list[a][0]][cell_list[a][1]] == board[cell_list[a+1][0]][cell_list[a+1][1]]:
+                            if board[cell_list[a+1][0]][cell_list[a+1][1]] == board[cell_list[a+2][0]][cell_list[a+2][1]] == flag:
+                                block[block_number] = flag
+                    for b in range(3):
+                        if board[cell_list[b][0]][cell_list[b][1]] == board[cell_list[b+3][0]][cell_list[b+3][1]]:
+                            if board[cell_list[b+3][0]][cell_list[b+3][1]] == board[cell_list[b+6][0]][cell_list[b+6][1]] == flag:
+                                block[block_number] = flag
+                    if board[cell_list[0][0]][cell_list[0][1]] == board[cell_list[4][0]][cell_list[4][1]] == board[cell_list[8][0]][cell_list[8][1]] == flag :
+                        block[block_number] = flag
+                    if board[cell_list[2][0]][cell_list[2][1]] == board[cell_list[4][0]][cell_list[4][1]] == board[cell_list[6][0]][cell_list[6][1]] == flag :
+                        block[block_number] = flag
+            return block
 
 
-        def tree_func(max_or_min , height , temp_alpha , temp_beta , temp_board , temp_block , old_move, flag):
+        def tree_func(self,max_or_min , height , temp_alpha , temp_beta , temp_board , temp_block , old_move, flag):
             aplha = temp_alpha # initializing the alpha value as passed by the parent 
             beta = temp_beta # initializing the value of beta as passed by the parent
             board = temp_board # initializing the board
@@ -107,7 +124,7 @@ class Player7:
                 else :
                     board[old_move[0]][old_move[1]] = 'o'
             
-            block = get_updated_block # here the function added by motwani will be used
+            block = self.update_block_list(old_move,board,block,flag) # here the function added by motwani will be used
 
             if  height == 4 : # if height is 4 we return the utility 
                 return utility_func(board)
@@ -124,7 +141,7 @@ class Player7:
                     if value < alpha :
                         break 
                 else :
-                    if value > beat :
+                    if value > beta :
                         break
 
                 temp_value = tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag)
