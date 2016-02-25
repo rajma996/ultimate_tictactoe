@@ -88,6 +88,65 @@ class Player7:
             return cell_list
 
 
+
+        def tree_func(max_or_min , height , temp_alpha , temp_beta , temp_board , temp_block , old_move, flag):
+            aplha = temp_alpha # initializing the alpha value as passed by the parent 
+            beta = temp_beta # initializing the value of beta as passed by the parent
+            board = temp_board # initializing the board
+            block = temp_block # initializing the block
+            if max_or_min == 0 :  # it is a min node and so our opponent
+                value = float("inf") 
+                if flag == 'x': # if our flag is x the opponent will move o
+                    board[old_move[0]][old_move[1]] = 'o'
+                else :
+                    board[old_move[0]][old_move[1]] = 'x'
+            else : # it is a max node so it is us
+                value = -1*float("inf") 
+                if flag == 'x': # if our flag is x the opponent will move o
+                    board[old_move[0]][old_move[1]] = 'x'
+                else :
+                    board[old_move[0]][old_move[1]] = 'o'
+            
+            block = get_updated_block # here the function added by motwani will be used
+
+            if  height == 4 : # if height is 4 we return the utility 
+                return utility_func(board)
+
+            allowed_block_list = self.get_block_list(old_move)
+
+            allowed_cell_list = self.get_cell_list(allowed_block_list,board,block) # getting the cell list for the next move
+
+            best_move = [] # initializing the best move
+
+            for i in range(len(allowed_cell_list)) :
+
+                if max_or_min == 0 : # a minimizer node and value < aplha no need to check children further 
+                    if value < alpha :
+                        break 
+                else :
+                    if value > beat :
+                        break
+
+                temp_value = tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag)
+
+                if max_or_min == 0 : # a minimizer node , so updating the value of beta 
+                    beta = min(beta,temp_value)
+                else : # maximizer so upating the value of aplha
+                    aplha = max(alpha ,temp_value) 
+
+                if max_or_min == 0 :  # minimizer, so updating the best move correspondingly
+                    if temp_value < value :
+                        value = temp_value 
+                        best_move = allowed_cell_list[i]
+
+                else : # maximizer , so updating the best move accordingly
+                    if temp_value > value :
+                        value = temp_value
+            
+                        best_move = allowed_cell_list[i]
+            
+            return value
+
 	def move(self,board,block,old_move,flag):
 
 		allowed_block_list = self.get_block_list(old_move)
@@ -95,10 +154,27 @@ class Player7:
 		allowed_cell_list = self.get_cell_list(allowed_block_list,board,block)
 
 		#return allowed_cell_list[random.randrange(len(allowed_cell_list))]
-                a =  allowed_cell_list[random.randrange(len(allowed_cell_list))]
-                return a
+                #a =  allowed_cell_list[random.randrange(len(allowed_cell_list))]
+                #return a
+                best_move = []
+                value = -1*float("inf")     # initial value for the root node 
+                alpha = -1*float("inf")  # initial alpha value for the root node 
+                beta = float("inf")      # initial beta value for the root node
+                for i in range(len(allowed_cell_list)):
+                    if value > beta:  # no need to check further children
+                        break
 
+                    temp_value = self.tree_func(0,1,aplha,beta,board,block,allowed_cell_list[i],flag) # first argument shows that the next node is minimizer
+                                                                                            # second argument shows the depth of the new node
+                    alpha = max(alpha,temp_value) # updating value of alpha
+                    if temp_value > value : # next child having better value , so update the best move
+                        value = temp_value
+                        best_move = allowed_cell_list[i]
 
+                    if value > beta:  # no need to check further children
+                        break
+
+                return (best_move[0],best_move[1])
 
 
 if __name__ == '__main__':  # add test cases here
