@@ -71,6 +71,22 @@ class Player7:
                             cell_list.append((j,k))
             return cell_list
 
+        
+        def get_block_number(self,old_move):  # returns the block number of a cell  tested and works fine
+            return ((old_move[0]/3)*3+old_move[1]/3) 
+
+        
+        def get_cell_list(self,block_number):  #retruns the 9 cells within a block tested and works fine 
+            cell_list = []
+            add_j = block_number/3  # value to be added to first numbers from pairs  0,0 to 2,2 to get to block list
+            add_k = block_number%3  # value to be added to second numbers from pairs  0,0 to 2,2 to get to block list
+            for j in range(3):
+                for k in range(3):
+                    j_temp = j+add_j*3
+                    k_temp = k+add_k*3    # j and k will give all elements of a given block
+                    cell_list.append([j_temp,k_temp])
+            return cell_list
+
 
 	def move(self,board,block,old_move,flag):
 
@@ -85,9 +101,9 @@ class Player7:
 
 
 
-'''if __name__ == '__main__':  # add test cases here
+if __name__ == '__main__':  # add test cases here
 
-    old_move = [-1 , -1]
+    '''old_move = [-1 , -1]
     flag = 'x'
     board = []
     block = []
@@ -108,3 +124,8 @@ class Player7:
 	temp_l = p.move(board,block,old_move,flag)
 
     print temp_l '''
+    p = Player7()
+    for i in range(9):
+        cell_list = p.get_cell_list(i)
+        for j in range(len(cell_list)):
+            print str(cell_list[j][0])+' '+str(cell_list[j][1])+'    ' ,
