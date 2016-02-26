@@ -5,6 +5,7 @@ first we find out which cells are valid '''
     while traversing it on the minimax tree'''
 
 import random
+import time
 class Player7:
 
 	def __init__(self):
@@ -49,7 +50,6 @@ class Player7:
 
 	    cell_list = []
             for i in range(len(allowed_block_list)) :
-                print block[allowed_block_list[i]]
                 if block[allowed_block_list[i]] != '-' : # the block is already won so we cannot move in that block
                     continue
 
@@ -88,6 +88,8 @@ class Player7:
             return cell_list
 
         def update_block_list(self,old_move,temp_board,temp_block,flag):
+            if old_move[0]==-1 and old_move[1]==-1:
+                return temp_block
             block_number = self.get_block_number(old_move)
             cell_list = self.get_cell_list_from_block(block_number) # Get All cells in the block where last move was played
             block = temp_block[:]   # new lists created because updating a list in a function also updates the list from where it is passed 
@@ -112,7 +114,14 @@ class Player7:
                 return random.randint(1,10) # just a random number from 1 to 10
 
 
+        def print_list(self,li):
+            for i in range(len(li)):
+                for j in range(len(li[i])):
+                    print str(li[i][j]) + ' ',
+                print
+                    
         def tree_func(self,max_or_min , height , temp_alpha , temp_beta , temp_board , temp_block , old_move, flag):
+
             alpha = temp_alpha # initializing the alpha value as passed by the parent 
             beta = temp_beta # initializing the value of beta as passed by the parent
             board = temp_board[:] # initializing the board
@@ -133,18 +142,39 @@ class Player7:
             block = self.update_block_list(old_move,board,block,flag) # here the function added by motwani will be used
 
             if  height == 4 : # if height is 4 we return the utility 
-                return self.utility_func(board)
+                print "leaf"
+                
+                print old_move
+                for i in range(len(temp_board)):
+                    for j in range(len(temp_board[i])):
+                        print temp_board[i][j],
+                    print
+
+
+                raju = self.utility_func(board)
+                return raju
 
             allowed_block_list = self.get_block_list(old_move)
-
+    
             allowed_cell_list = self.get_cell_list(allowed_block_list,board,block) # getting the cell list for the next move
 
             best_move = [] # initializing the best move
 
+
             for i in range(len(allowed_cell_list)) :
 
-
+                print "root "
+                print old_move
+                for j in range(len(temp_board)):
+                    for k in range(len(temp_board[j])):
+                        print temp_board[j][k],
+                    print
+                
+                print "child"  
+                print allowed_cell_list[i]
+                
                 temp_value = self.tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag)
+
 
                 if max_or_min == 0 :  # minimizer, so updating the best move correspondingly
                     if temp_value < value :
@@ -169,6 +199,7 @@ class Player7:
                 else : # maximizer so upating the value of aplha
                     aplha = max(alpha ,temp_value) 
 
+            
             return value
 
 	def move(self,board,block,old_move,flag):
@@ -180,7 +211,6 @@ class Player7:
 		#return allowed_cell_list[random.randrange(len(allowed_cell_list))]
                 #a =  allowed_cell_list[random.randrange(len(allowed_cell_list))]
                 #return a
-                board[old_move[0]][old_move[1]] = flag
                 block = self.update_block_list(old_move,board,block,flag)
                 best_move = []
                 value = -1*float("inf")     # initial value for the root node 
@@ -190,6 +220,7 @@ class Player7:
 
                     temp_value = self.tree_func(0,1,alpha,beta,board,block,allowed_cell_list[i],flag) # first argument shows that the next node is minimizer
                                                                                             # second argument shows the depth of the new node
+                    print allowed_cell_list[i], temp_value 
                     if temp_value > value : # next child having better value , so update the best move
                         value = temp_value
                         best_move = allowed_cell_list[i]
@@ -226,7 +257,3 @@ if __name__ == '__main__':  # add test cases here
 
     print temp_l '''
     p = Player7()
-    for i in range(9):
-        cell_list = p.get_cell_list(i)
-        for j in range(len(cell_list)):
-            print str(cell_list[j][0])+' '+str(cell_list[j][1])+'    ' ,

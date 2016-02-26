@@ -20,7 +20,8 @@ def test_update_block_list_function():
 
         p = Player7()
         raj = p.move(board,block,[-1,-1],flag)
-        board[raj[0]][raj[1]] = flag 
+        board[raj[0]][raj[1]] = flag
+        print raj[0],raj[1], 
         for i in range(9):
                 print
                 for j in range(9):
