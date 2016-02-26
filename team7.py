@@ -87,9 +87,11 @@ class Player7:
                     cell_list.append([j_temp,k_temp])
             return cell_list
 
-        def update_block_list(self,old_move,board,block,flag):
+        def update_block_list(self,old_move,temp_board,temp_block,flag):
             block_number = self.get_block_number(old_move)
             cell_list = self.get_cell_list_from_block(block_number) # Get All cells in the block where last move was played
+            block = temp_block[:]   # new lists created because updating a list in a function also updates the list from where it is passed 
+            board = temp_board[:]
             if(block[block_number] == '-'):
                     for a in range(0,9,3):
                         if board[cell_list[a][0]][cell_list[a][1]] == board[cell_list[a+1][0]][cell_list[a+1][1]]:
@@ -106,15 +108,15 @@ class Player7:
             return block
 
 
-        def utility_func(temp_board) : # temprorary utility function
-                return 5
+        def utility_func(self,temp_board) : # temprorary utility function
+                return random.randint(1,10) # just a random number from 1 to 10
 
 
         def tree_func(self,max_or_min , height , temp_alpha , temp_beta , temp_board , temp_block , old_move, flag):
-            aplha = temp_alpha # initializing the alpha value as passed by the parent 
+            alpha = temp_alpha # initializing the alpha value as passed by the parent 
             beta = temp_beta # initializing the value of beta as passed by the parent
-            board = temp_board # initializing the board
-            block = temp_block # initializing the block
+            board = temp_board[:] # initializing the board
+            block = temp_block[:] # initializing the block
             if max_or_min == 0 :  # it is a min node and so our opponent
                 value = float("inf") 
                 if flag == 'x': # if our flag is x the opponent will move o
@@ -131,7 +133,7 @@ class Player7:
             block = self.update_block_list(old_move,board,block,flag) # here the function added by motwani will be used
 
             if  height == 4 : # if height is 4 we return the utility 
-                return utility_func(board)
+                return self.utility_func(board)
 
             allowed_block_list = self.get_block_list(old_move)
 
@@ -142,7 +144,7 @@ class Player7:
             for i in range(len(allowed_cell_list)) :
 
 
-                temp_value = tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag)
+                temp_value = self.tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag)
 
                 if max_or_min == 0 :  # minimizer, so updating the best move correspondingly
                     if temp_value < value :
@@ -178,13 +180,15 @@ class Player7:
 		#return allowed_cell_list[random.randrange(len(allowed_cell_list))]
                 #a =  allowed_cell_list[random.randrange(len(allowed_cell_list))]
                 #return a
+                board[old_move[0]][old_move[1]] = flag
+                block = self.update_block_list(old_move,board,block,flag)
                 best_move = []
                 value = -1*float("inf")     # initial value for the root node 
                 alpha = -1*float("inf")  # initial alpha value for the root node 
                 beta = float("inf")      # initial beta value for the root node
                 for i in range(len(allowed_cell_list)):
 
-                    temp_value = self.tree_func(0,1,aplha,beta,board,block,allowed_cell_list[i],flag) # first argument shows that the next node is minimizer
+                    temp_value = self.tree_func(0,1,alpha,beta,board,block,allowed_cell_list[i],flag) # first argument shows that the next node is minimizer
                                                                                             # second argument shows the depth of the new node
                     if temp_value > value : # next child having better value , so update the best move
                         value = temp_value
