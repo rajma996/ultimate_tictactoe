@@ -94,7 +94,15 @@ class Player7:
             cell_list = self.get_cell_list_from_block(block_number) # Get All cells in the block where last move was played
             block = temp_block[:]   # new lists created because updating a list in a function also updates the list from where it is passed 
             board = temp_board[:]
+            c = 0
             if(block[block_number] == '-'):
+                    for a in range(9):
+                            if board[cell_list[a][0]][cell_list[a][1]] != '-' :
+                                c = c+1
+                            if c == 9:
+                                block[block_number] = 'D'
+                                return block
+                                
                     for a in range(0,9,3):
                         if board[cell_list[a][0]][cell_list[a][1]] == board[cell_list[a+1][0]][cell_list[a+1][1]]:
                             if board[cell_list[a+1][0]][cell_list[a+1][1]] == board[cell_list[a+2][0]][cell_list[a+2][1]] == flag:
