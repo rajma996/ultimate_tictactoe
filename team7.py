@@ -6,6 +6,7 @@ first we find out which cells are valid '''
 
 import random
 import time
+import copy
 class Player7:
 
 	def __init__(self):
@@ -92,8 +93,8 @@ class Player7:
                 return temp_block
             block_number = self.get_block_number(old_move)
             cell_list = self.get_cell_list_from_block(block_number) # Get All cells in the block where last move was played
-            block = temp_block[:]   # new lists created because updating a list in a function also updates the list from where it is passed 
-            board = temp_board[:]
+            block = copy.deepcopy(temp_block) # new lists created because updating a list in a function also updates the list from where it is passed 
+            board = copy.deepcopy(temp_board)
             c = 0
             if(block[block_number] == '-'):
                     for a in range(9):
@@ -132,8 +133,8 @@ class Player7:
 
             alpha = temp_alpha # initializing the alpha value as passed by the parent 
             beta = temp_beta # initializing the value of beta as passed by the parent
-            board = temp_board[:] # initializing the board
-            block = temp_block[:] # initializing the block
+            board = copy.deepcopy(temp_board) # initializing the board
+            block = copy.deepcopy(temp_block) # initializing the block
             if max_or_min == 0 :  # it is a min node and so our opponent
                 value = float("inf") 
                 if flag == 'x': # if our flag is x the opponent will move o
@@ -153,9 +154,9 @@ class Player7:
                 print "leaf"
                 
                 print old_move
-                for i in range(len(temp_board)):
-                    for j in range(len(temp_board[i])):
-                        print temp_board[i][j],
+                for i in range(len(board)):
+                    for j in range(len(board[i])):
+                        print board[i][j],
                     print
 
 
@@ -173,9 +174,9 @@ class Player7:
 
                 print "root "
                 print old_move
-                for j in range(len(temp_board)):
-                    for k in range(len(temp_board[j])):
-                        print temp_board[j][k],
+                for j in range(len(board)):
+                    for k in range(len(board[j])):
+                        print board[j][k],
                     print
                 
                 print "child"  
