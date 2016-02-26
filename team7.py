@@ -106,6 +106,10 @@ class Player7:
             return block
 
 
+        def utility_func(temp_board) : # temprorary utility function
+                return 5
+
+
         def tree_func(self,max_or_min , height , temp_alpha , temp_beta , temp_board , temp_block , old_move, flag):
             aplha = temp_alpha # initializing the alpha value as passed by the parent 
             beta = temp_beta # initializing the value of beta as passed by the parent
@@ -137,19 +141,8 @@ class Player7:
 
             for i in range(len(allowed_cell_list)) :
 
-                if max_or_min == 0 : # a minimizer node and value < aplha no need to check children further 
-                    if value < alpha :
-                        break 
-                else :
-                    if value > beta :
-                        break
 
                 temp_value = tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag)
-
-                if max_or_min == 0 : # a minimizer node , so updating the value of beta 
-                    beta = min(beta,temp_value)
-                else : # maximizer so upating the value of aplha
-                    aplha = max(alpha ,temp_value) 
 
                 if max_or_min == 0 :  # minimizer, so updating the best move correspondingly
                     if temp_value < value :
@@ -162,6 +155,18 @@ class Player7:
             
                         best_move = allowed_cell_list[i]
             
+                if max_or_min == 0 : # a minimizer node and value < aplha no need to check children further 
+                    if value < alpha :
+                        break 
+                else :
+                    if value > beta :
+                        break
+
+                if max_or_min == 0 : # a minimizer node , so updating the value of beta 
+                    beta = min(beta,temp_value)
+                else : # maximizer so upating the value of aplha
+                    aplha = max(alpha ,temp_value) 
+
             return value
 
 	def move(self,board,block,old_move,flag):
@@ -178,15 +183,14 @@ class Player7:
                 alpha = -1*float("inf")  # initial alpha value for the root node 
                 beta = float("inf")      # initial beta value for the root node
                 for i in range(len(allowed_cell_list)):
-                    if value > beta:  # no need to check further children
-                        break
 
                     temp_value = self.tree_func(0,1,aplha,beta,board,block,allowed_cell_list[i],flag) # first argument shows that the next node is minimizer
                                                                                             # second argument shows the depth of the new node
-                    alpha = max(alpha,temp_value) # updating value of alpha
                     if temp_value > value : # next child having better value , so update the best move
                         value = temp_value
                         best_move = allowed_cell_list[i]
+
+                    alpha = max(alpha,temp_value) # updating value of alpha
 
                     if value > beta:  # no need to check further children
                         break
