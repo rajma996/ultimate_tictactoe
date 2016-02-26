@@ -49,7 +49,6 @@ class Player7:
 
 	    cell_list = []
             for i in range(len(allowed_block_list)) :
-                print block[allowed_block_list[i]]
                 if block[allowed_block_list[i]] != '-' : # the block is already won so we cannot move in that block
                     continue
 
@@ -92,7 +91,15 @@ class Player7:
             cell_list = self.get_cell_list_from_block(block_number) # Get All cells in the block where last move was played
             block = temp_block[:]   # new lists created because updating a list in a function also updates the list from where it is passed 
             board = temp_board[:]
+            c = 0
             if(block[block_number] == '-'):
+                    for a in range(9):
+                            if board[cell_list[a][0]][cell_list[a][1]] != '-' :
+                                c = c+1
+                            if c == 9:
+                                block[block_number] = 'D'
+                                return block
+                                
                     for a in range(0,9,3):
                         if board[cell_list[a][0]][cell_list[a][1]] == board[cell_list[a+1][0]][cell_list[a+1][1]]:
                             if board[cell_list[a+1][0]][cell_list[a+1][1]] == board[cell_list[a+2][0]][cell_list[a+2][1]] == flag:
@@ -226,7 +233,3 @@ if __name__ == '__main__':  # add test cases here
 
     print temp_l '''
     p = Player7()
-    for i in range(9):
-        cell_list = p.get_cell_list(i)
-        for j in range(len(cell_list)):
-            print str(cell_list[j][0])+' '+str(cell_list[j][1])+'    ' ,
