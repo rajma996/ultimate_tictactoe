@@ -96,32 +96,57 @@ class Player7:
             block = copy.deepcopy(temp_block) # new lists created because updating a list in a function also updates the list from where it is passed 
             board = copy.deepcopy(temp_board)
             c = 0
+            update_flag = 0
             if(block[block_number] == '-'):
-                    for a in range(9):
-                            if board[cell_list[a][0]][cell_list[a][1]] != '-' :
-                                c = c+1
-                            if c == 9:
-                                block[block_number] = 'D'
-                                return block
                                 
                     for a in range(0,9,3):
-                        if board[cell_list[a][0]][cell_list[a][1]] == board[cell_list[a+1][0]][cell_list[a+1][1]]:
-                            if board[cell_list[a+1][0]][cell_list[a+1][1]] == board[cell_list[a+2][0]][cell_list[a+2][1]] == flag:
-                                block[block_number] = flag
+                        if board[cell_list[a][0]][cell_list[a][1]] == board[cell_list[a+1][0]][cell_list[a+1][1]]  == board[cell_list[a+2][0]][cell_list[a+2][1]] == 'x' and update_flag==0:
+                            block[block_number] = 'x'
+                            update_flag = 1
+                        
+                        elif board[cell_list[a][0]][cell_list[a][1]] == board[cell_list[a+1][0]][cell_list[a+1][1]]  == board[cell_list[a+2][0]][cell_list[a+2][1]] == 'o' and update_flag==0: 
+                            block[block_number] = 'o'
+                            update_flag =1 
                     for b in range(3):
-                        if board[cell_list[b][0]][cell_list[b][1]] == board[cell_list[b+3][0]][cell_list[b+3][1]]:
-                            if board[cell_list[b+3][0]][cell_list[b+3][1]] == board[cell_list[b+6][0]][cell_list[b+6][1]] == flag:
-                                block[block_number] = flag
-                    if board[cell_list[0][0]][cell_list[0][1]] == board[cell_list[4][0]][cell_list[4][1]] == board[cell_list[8][0]][cell_list[8][1]] == flag :
-                        block[block_number] = flag
-                    if board[cell_list[2][0]][cell_list[2][1]] == board[cell_list[4][0]][cell_list[4][1]] == board[cell_list[6][0]][cell_list[6][1]] == flag :
-                        block[block_number] = flag
+                        if board[cell_list[b][0]][cell_list[b][1]] == board[cell_list[b+3][0]][cell_list[b+3][1]] == board[cell_list[b+6][0]][cell_list[b+6][1]] == 'x' and update_flag==0 :
+                            block[block_number] = 'x'
+                            update_flag=1
+                            
+                        elif board[cell_list[b][0]][cell_list[b][1]] == board[cell_list[b+3][0]][cell_list[b+3][1]] == board[cell_list[b+6][0]][cell_list[b+6][1]] == 'o' and update_flag ==0:
+                            block[block_number] = 'o'
+                            update_flag =1 
+
+                    if board[cell_list[0][0]][cell_list[0][1]] == board[cell_list[4][0]][cell_list[4][1]] == board[cell_list[8][0]][cell_list[8][1]] == 'x'  and update_flag ==0 :
+                        block[block_number] = 'x'
+                        update_flag =1 
+
+                    elif board[cell_list[0][0]][cell_list[0][1]] == board[cell_list[4][0]][cell_list[4][1]] == board[cell_list[8][0]][cell_list[8][1]] == 'o' and update_flag ==0:
+                        block[block_number] = 'o'
+                        update_flag =1 
+
+                    elif board[cell_list[2][0]][cell_list[2][1]] == board[cell_list[4][0]][cell_list[4][1]] == board[cell_list[6][0]][cell_list[6][1]] == 'x' and update_flag ==0:
+                        block[block_number] = 'x'
+                        update_flag =1 
+
+                    elif board[cell_list[2][0]][cell_list[2][1]] == board[cell_list[4][0]][cell_list[4][1]] == board[cell_list[6][0]][cell_list[6][1]] == 'o' and update_flag ==0:
+                        block[block_number] = 'o'
+                        update_flag =1 
+
+                    else:
+                        for a in range(9): 
+                                if board[cell_list[a][0]][cell_list[a][1]] != '-' :
+                                    c = c+1
+                                if c == 9 and update_flag ==0:
+                                    block[block_number] = 'D'
+                                    update_flag = 1 
+                                    return block
             return block
 
 
         def utility_func(self,temp_board) : # temprorary utility function
-                return random.randint(1,10) # just a random number from 1 to 10
-
+            return random.randint(1,10) # just a random number from 1 to 10
+            #board = copy.softcopy(temp_board)
+            
 
         def print_list(self,li):
             for i in range(len(li)):
@@ -150,7 +175,7 @@ class Player7:
             
             block = self.update_block_list(old_move,board,block,flag) # here the function added by motwani will be used
 
-            if  height == 3 : # if height is 4 we return the utility 
+            if  height == 4 : # if height is 4 we return the utility 
 #                print "leaf"
 #                
 #                print old_move
