@@ -11,7 +11,6 @@ class Player7:
 
 	def __init__(self):
 		''' Variables Declared Here '''
-
 		pass
 
 
@@ -141,6 +140,34 @@ class Player7:
                                     update_flag = 1 
                                     return block
             return block
+
+
+        def get_utility_block(self,temp_board,block_number,flag):
+            three_row  =   [ [0, 1, 2 ],[ 3, 4, 5 ], [ 6, 7, 8 ],[ 0, 3, 6 ],[ 1, 4, 7 ],[ 2, 5, 8 ],[ 0, 4, 8 ],[ 2, 4, 6 ] ]
+            heuristic_array = [ [0,-10,-100,-1000], [10,0,0,0] , [100,0,0,0] , [1000,0,0,0] ]
+            board = copy.deepcopy(temp_board)
+            player = flag 
+            if flag == 'x':
+                opponent = 'o'
+            else :
+                opponent = 'x'
+            cell_list = self.get_cell_list_from_block(block_number)
+            final = 0
+            for i in range(len(three_row)):
+                p1 = 0
+                p2 = 0
+                piece = []
+                piece.append( board[cell_list[three_row[i][0]][0]][cell_list[three_row[i][0]][1]] )
+                piece.append( board[cell_list[three_row[i][1]][0]][cell_list[three_row[i][1]][1]] )
+                piece.append( board[cell_list[three_row[i][2]][0]][cell_list[three_row[i][2]][1]] )
+                for j in range(len(piece))  :
+                    if piece[j]==player:
+                        p1 = p1+1
+                    elif piece[j]==opponent :
+                        p2 = p2+1
+                final = final + heuristic_array[p1][p2]
+
+            return final
 
 
         def utility_func(self,temp_board) : # temprorary utility function
