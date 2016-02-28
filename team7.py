@@ -11,7 +11,6 @@ class Player7:
 
 	def __init__(self):
 		''' Variables Declared Here '''
-
 		pass
 
 
@@ -145,13 +144,13 @@ class Player7:
 
         def utility_func(self,temp_board,flag) : # temprorary utility function
 
+            board = copy.deepcopy(temp_board)
             if flag == 'x':
                 opponent = 'o'
             else :
                 opponent = 'x'
-            score = 0
             three_in_a_row = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,7]]
-            heuristic = [[0,-10,-100,-1000],[10,0,-10,-100],[100,10,0,-10],[1000,0,0,0]]
+            heuristic = [[0,-10,-100,-1000],[10,0,0,0],[100,0,0,0],[1000,0,0,0]]
             list_block = []
             for i in range(9):
                 temp_score = 0
@@ -162,7 +161,7 @@ class Player7:
                     my_piece = 0
                     opponent_piece = 0
                     for k in range(3):
-                        piece = temp_board[elements[three_in_a_row[j][k]][0]][elements[three_in_a_row[j][k]][1]]
+                        piece = board[elements[three_in_a_row[j][k]][0]][elements[three_in_a_row[j][k]][1]]
                         if piece == flag :
                             my_piece = my_piece + 1
                         elif piece == opponent :
@@ -177,7 +176,7 @@ class Player7:
                 mini = min(mini,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]],list_block[three_in_a_row[i][2]])
 
             return maxi+mini
-            #board = copy.softcopy(temp_board)
+
             
 
         def print_list(self,li):
@@ -269,10 +268,10 @@ class Player7:
             return value
 
 	def move(self,temp_board,temp_block,old_move,flag):
-        board = copy.deepcopy(temp_board)
-        block = copy.deepcopy(temp_block)
-		allowed_block_list = self.get_block_list(old_move)
-		allowed_cell_list = self.get_cell_list(allowed_block_list,board,block)
+                board = copy.deepcopy(temp_board)
+                block = copy.deepcopy(temp_block)
+                allowed_block_list = self.get_block_list(old_move)
+    	        allowed_cell_list = self.get_cell_list(allowed_block_list,board,block)
 
                 #return allowed_cell_list[random.randrange(len(allowed_cell_list))]
                 #a =  allowed_cell_list[random.randrange(len(allowed_cell_list))]
