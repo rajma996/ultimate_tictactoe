@@ -143,8 +143,40 @@ class Player7:
             return block
 
 
-        def utility_func(self,temp_board) : # temprorary utility function
-            return random.randint(1,10) # just a random number from 1 to 10
+        def utility_func(self,temp_board,flag) : # temprorary utility function
+
+            if flag == 'x':
+                opponent = 'o'
+            else :
+                opponent = 'x'
+            score = 0
+            three_in_a_row = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,7]]
+            heuristic = [[0,-10,-100,-1000],[10,0,-10,-100],[100,10,0,-10],[1000,0,0,0]]
+            list_block = []
+            for i in range(9):
+                temp_score = 0
+                elements = self.get_cell_list_from_block(i)
+                #print elements[0]
+                #print 'xx'
+                for j in range(8):
+                    my_piece = 0
+                    opponent_piece = 0
+                    for k in range(3):
+                        piece = temp_board[elements[three_in_a_row[j][k]][0]][elements[three_in_a_row[j][k]][1]]
+                        if piece == flag :
+                            my_piece = my_piece + 1
+                        elif piece == opponent :
+                            opponent_piece = opponent_piece + 1
+                    temp_score += heuristic[my_piece][opponent_piece]
+                list_block.append(temp_score)
+            
+            maxi = -1*float("inf")
+            mini = float("inf")
+            for i in range(8):
+                maxi = max(maxi,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]],list_block[three_in_a_row[i][2]])
+                mini = min(mini,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]],list_block[three_in_a_row[i][2]])
+
+            return maxi+mini
             #board = copy.softcopy(temp_board)
             
 
@@ -185,7 +217,7 @@ class Player7:
 #                    print
 
 
-                raju = self.utility_func(board)
+                raju = self.utility_func(board,flag)
                 return raju
 
             allowed_block_list = self.get_block_list(old_move)
@@ -236,15 +268,18 @@ class Player7:
             
             return value
 
-	def move(self,board,block,old_move,flag):
-
+	def move(self,temp_board,temp_block,old_move,flag):
+        board = copy.deepcopy(temp_board)
+        block = copy.deepcopy(temp_block)
 		allowed_block_list = self.get_block_list(old_move)
-
 		allowed_cell_list = self.get_cell_list(allowed_block_list,board,block)
 
                 #return allowed_cell_list[random.randrange(len(allowed_cell_list))]
                 #a =  allowed_cell_list[random.randrange(len(allowed_cell_list))]
                 #return a
+                if old_move[0]==-1 and old_move[1]==-1:
+                    return (4,4)
+                
                 block = self.update_block_list(old_move,board,block,flag)
                 best_move = []
                 value = -1*float("inf")     # initial value for the root node 
