@@ -6,6 +6,7 @@ first we find out which cells are valid '''
 
 import random
 import time
+import sys
 import copy
 class Player7:
 
@@ -268,6 +269,7 @@ class Player7:
             return value
 
 	def move(self,temp_board,temp_block,old_move,flag):
+                t = time.time()
                 board = copy.deepcopy(temp_board)
                 block = copy.deepcopy(temp_block)
                 allowed_block_list = self.get_block_list(old_move)
@@ -285,9 +287,24 @@ class Player7:
                 alpha = -1*float("inf")  # initial alpha value for the root node 
                 beta = float("inf")      # initial beta value for the root node
                 for i in range(len(allowed_cell_list)):
-
+                    if time.time() - t > 11.5 :
+                        old_stdout = sys.stdout
+                        log_file = open("message.log","w+")
+                        sys.stdout = log_file
+                        print "Returned due to lack of time, Best Move is",best_move[0],best_move[1]
+                        sys.stdout = old_stdout
+                        log_file.close()
+                        return (best_move[0],best_move[1])
                     temp_value = self.tree_func(0,1,alpha,beta,board,block,allowed_cell_list[i],flag) # first argument shows that the next node is minimizer
                                                                                             # second argument shows the depth of the new node
+                    if time.time() - t > 11.5 :
+                        old_stdout = sys.stdout
+                        log_file = open("message.log","w+")
+                        sys.stdout = log_file
+                        print "Returned due to lack of time, Best Move is",best_move[0],best_move[1]
+                        sys.stdout = old_stdout
+                        log_file.close()
+                        return (best_move[0],best_move[1])
                     #print allowed_cell_list[i], temp_value 
                     if temp_value > value : # next child having better value , so update the best move
                         value = temp_value

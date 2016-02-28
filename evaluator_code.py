@@ -409,7 +409,7 @@ if __name__ == '__main__':
 
 	num = random.uniform(0,1)
 	if num > 0.5:
-		simulate(obj2, obj1)
+		simulate(obj1, obj2)
 	else:
 		simulate(obj1, obj2)
 		
