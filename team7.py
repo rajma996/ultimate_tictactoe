@@ -283,7 +283,7 @@ class Player7:
                 for i in range(len(allowed_cell_list)):
                     if time.time() - t > 11.5 :
                         old_stdout = sys.stdout
-                        log_file = open("message.log","w+")
+                        log_file = open("message.log","a")
                         sys.stdout = log_file
                         print "Returned due to lack of time, Best Move is",best_move[0],best_move[1]
                         sys.stdout = old_stdout
@@ -293,7 +293,7 @@ class Player7:
                                                                                             # second argument shows the depth of the new node
                     if time.time() - t > 11.5 :
                         old_stdout = sys.stdout
-                        log_file = open("message.log","w+")
+                        log_file = open("message.log","a")
                         sys.stdout = log_file
                         print "Returned due to lack of time, Best Move is",best_move[0],best_move[1]
                         sys.stdout = old_stdout
