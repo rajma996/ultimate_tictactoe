@@ -88,58 +88,32 @@ class Player7:
                     cell_list.append([j_temp,k_temp])
             return cell_list
 
-        def update_block_list(self,old_move,temp_board,temp_block,flag):
+        def update_block_list(self,old_move,temp_board,temp_block):
             if old_move[0]==-1 and old_move[1]==-1:
                 return temp_block
             block_number = self.get_block_number(old_move)
             cell_list = self.get_cell_list_from_block(block_number) # Get All cells in the block where last move was played
-            block = copy.deepcopy(temp_block) # new lists created because updating a list in a function also updates the list from where it is passed 
+            block = copy.deepcopy(temp_block)  
             board = copy.deepcopy(temp_board)
-            c = 0
-            update_flag = 0
-            if(block[block_number] == '-'):
-                                
-                    for a in range(0,9,3):
-                        if board[cell_list[a][0]][cell_list[a][1]] == board[cell_list[a+1][0]][cell_list[a+1][1]]  == board[cell_list[a+2][0]][cell_list[a+2][1]] == 'x' and update_flag==0:
-                            block[block_number] = 'x'
-                            update_flag = 1
-                        
-                        elif board[cell_list[a][0]][cell_list[a][1]] == board[cell_list[a+1][0]][cell_list[a+1][1]]  == board[cell_list[a+2][0]][cell_list[a+2][1]] == 'o' and update_flag==0: 
-                            block[block_number] = 'o'
-                            update_flag =1 
-                    for b in range(3):
-                        if board[cell_list[b][0]][cell_list[b][1]] == board[cell_list[b+3][0]][cell_list[b+3][1]] == board[cell_list[b+6][0]][cell_list[b+6][1]] == 'x' and update_flag==0 :
-                            block[block_number] = 'x'
-                            update_flag=1
-                            
-                        elif board[cell_list[b][0]][cell_list[b][1]] == board[cell_list[b+3][0]][cell_list[b+3][1]] == board[cell_list[b+6][0]][cell_list[b+6][1]] == 'o' and update_flag ==0:
-                            block[block_number] = 'o'
-                            update_flag =1 
-
-                    if board[cell_list[0][0]][cell_list[0][1]] == board[cell_list[4][0]][cell_list[4][1]] == board[cell_list[8][0]][cell_list[8][1]] == 'x'  and update_flag ==0 :
+            three_in_a_row = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,7]]
+            for i in range(8):
+                cell1 = three_in_a_row[i][0]
+                cell2 = three_in_a_row[i][1]
+                cell3 = three_in_a_row[i][2]
+                if board[cell_list[cell1][0]][cell_list[cell1][1]] == board[cell_list[cell2][0]][cell_list[cell2][1]] ==  board[cell_list[cell3][0]][cell_list[cell3][1]] == 'x' :
+                    if block[block_number]=='-':
                         block[block_number] = 'x'
-                        update_flag =1 
 
-                    elif board[cell_list[0][0]][cell_list[0][1]] == board[cell_list[4][0]][cell_list[4][1]] == board[cell_list[8][0]][cell_list[8][1]] == 'o' and update_flag ==0:
+                if board[cell_list[cell1][0]][cell_list[cell1][1]] == board[cell_list[cell2][0]][cell_list[cell2][1]] ==  board[cell_list[cell3][0]][cell_list[cell3][1]] == 'o' :
+                    if block[block_number]=='-':
                         block[block_number] = 'o'
-                        update_flag =1 
 
-                    elif board[cell_list[2][0]][cell_list[2][1]] == board[cell_list[4][0]][cell_list[4][1]] == board[cell_list[6][0]][cell_list[6][1]] == 'x' and update_flag ==0:
-                        block[block_number] = 'x'
-                        update_flag =1 
-
-                    elif board[cell_list[2][0]][cell_list[2][1]] == board[cell_list[4][0]][cell_list[4][1]] == board[cell_list[6][0]][cell_list[6][1]] == 'o' and update_flag ==0:
-                        block[block_number] = 'o'
-                        update_flag =1 
-
-                    else:
-                        for a in range(9): 
-                                if board[cell_list[a][0]][cell_list[a][1]] != '-' :
-                                    c = c+1
-                                if c == 9 and update_flag ==0:
-                                    block[block_number] = 'D'
-                                    update_flag = 1 
-                                    return block
+            draw_flag = 0
+            for i in range(9):
+                if board[cell_list[i][0]][cell_list[i][1]] == '-': # at least one is empty
+                    draw_flag = 1 
+            if draw_flag ==0: # no empty cell in block
+                block[block_number] = 'D'
             return block
 
 
@@ -170,12 +144,19 @@ class Player7:
                     temp_score += heuristic[my_piece][opponent_piece]
                 list_block.append(temp_score)
             
+#            for i in range(9) :
+#                print str(list_block[i])+' ',
+
             maxi = -1*float("inf")
             mini = float("inf")
+            ret = 0
             for i in range(8):
-                maxi = max(maxi,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]],list_block[three_in_a_row[i][2]])
-                mini = min(mini,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]],list_block[three_in_a_row[i][2]])
-
+#                 print str(list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])+str(' ') + str(i)
+#                 print "for  "+str(three_in_a_row[i][0]) + ' ' + str(three_in_a_row[i][1])+str(' ') + str(three_in_a_row[i][2])
+                maxi = max(maxi,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])
+                mini = min(mini,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])
+#                 ret = ret+ list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]]
+                 
             return maxi+mini
 
             
@@ -186,12 +167,13 @@ class Player7:
                     print str(li[i][j]) + ' ',
                 print
                     
-        def tree_func(self,max_or_min , height , temp_alpha , temp_beta , temp_board , temp_block , old_move, flag):
+        def tree_func(self,max_or_min , height , alpha , beta , temp_board , temp_block , old_move, flag):
 
-            alpha = temp_alpha # initializing the alpha value as passed by the parent 
-            beta = temp_beta # initializing the value of beta as passed by the parent
             board = copy.deepcopy(temp_board) # initializing the board
             block = copy.deepcopy(temp_block) # initializing the block
+            
+
+
             if max_or_min == 0 :  # it is a min node and so our opponent
                 value = float("inf") 
                 if flag == 'x': # if our flag is x the opponent will move o
@@ -205,7 +187,23 @@ class Player7:
                 else :
                     board[old_move[0]][old_move[1]] = 'o'
             
-            block = self.update_block_list(old_move,board,block,flag) # here the function added by motwani will be used
+#            temp_b = copy.deepcopy(block)
+            block = self.update_block_list(old_move,board,block) # here the function added by motwani will be used
+#            if temp_b != block:
+#                print "block update "
+#                print "root "
+#                print old_move
+#                print "max or min "
+#                print max_or_min
+#                for j in range(len(board)):
+#                    for k in range(len(board[j])):
+#                        print board[j][k],
+#                    print
+#                raw_input("press enter to continue")
+            allowed_block_list = self.get_block_list(old_move)
+    
+            allowed_cell_list = self.get_cell_list(allowed_block_list,board,block) # getting the cell list for the next move
+
 
             if  height == 4 : # if height is 4 we return the utility 
 #                print "leaf"
@@ -215,22 +213,19 @@ class Player7:
 #                    for j in range(len(board[i])):
 #                        print board[i][j],
 #                    print
-
-
+#
                 raju = self.utility_func(board,flag)
+#                print "return value    " + str(raju)
+#                raw_input("press enter to continue")
                 return raju
-
-            allowed_block_list = self.get_block_list(old_move)
-    
-            allowed_cell_list = self.get_cell_list(allowed_block_list,board,block) # getting the cell list for the next move
-
-            best_move = [] # initializing the best move
 
 
             for i in range(len(allowed_cell_list)) :
 
 #                print "root "
 #                print old_move
+#                print "max or min "
+#                print max_or_min
 #                for j in range(len(board)):
 #                    for k in range(len(board[j])):
 #                        print board[j][k],
@@ -238,34 +233,38 @@ class Player7:
 #                
 #                print "child"  
 #                print allowed_cell_list[i]
+#                raw_input("press enter to continue")
+#                print "alpha " + str(alpha)
+#                print "beta " + str(beta)
+#                print "value " + str(value)
+#                print "child " + str(allowed_cell_list[i])
+#                raw_input("press enter to continue")
                 
-                temp_value = self.tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag)
-
-
                 if max_or_min == 0 :  # minimizer, so updating the best move correspondingly
-                    if temp_value < value :
-                        value = temp_value 
-                        best_move = allowed_cell_list[i]
+                        value = min(value,self.tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag))
+
 
                 else : # maximizer , so updating the best move accordingly
-                    if temp_value > value :
-                        value = temp_value
-            
-                        best_move = allowed_cell_list[i]
-            
+                        value = max(value,self.tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag))
+
                 if max_or_min == 0 : # a minimizer node and value < aplha no need to check children further 
                     if value < alpha :
-                        break 
+                        return value
                 else :
                     if value > beta :
-                        break
+                        return value
 
                 if max_or_min == 0 : # a minimizer node , so updating the value of beta 
-                    beta = min(beta,temp_value)
+                    beta = min(beta,value)
                 else : # maximizer so upating the value of aplha
-                    aplha = max(alpha ,temp_value) 
+                    aplha = max(alpha ,value) 
 
-            
+#            print "final return value for root  "+ str(old_move),
+#            for j in range(len(board)):
+#                for k in range(len(board[j])):
+#                    print board[j][k],
+#                print
+#            print "return value " + str(value)
             return value
 
 	def move(self,temp_board,temp_block,old_move,flag):
@@ -275,14 +274,9 @@ class Player7:
                 allowed_block_list = self.get_block_list(old_move)
     	        allowed_cell_list = self.get_cell_list(allowed_block_list,board,block)
 
-                #return allowed_cell_list[random.randrange(len(allowed_cell_list))]
-                #a =  allowed_cell_list[random.randrange(len(allowed_cell_list))]
-                #return a
                 if old_move[0]==-1 and old_move[1]==-1:
                     return (4,4)
-                
-                block = self.update_block_list(old_move,board,block,flag)
-                best_move = []
+                best_move = allowed_cell_list[random.randrange(len(allowed_cell_list))]
                 value = -1*float("inf")     # initial value for the root node 
                 alpha = -1*float("inf")  # initial alpha value for the root node 
                 beta = float("inf")      # initial beta value for the root node
@@ -295,7 +289,7 @@ class Player7:
                         sys.stdout = old_stdout
                         log_file.close()
                         return (best_move[0],best_move[1])
-                    temp_value = self.tree_func(0,1,alpha,beta,board,block,allowed_cell_list[i],flag) # first argument shows that the next node is minimizer
+                    temp_value = self.tree_func(1,1,alpha,beta,board,block,allowed_cell_list[i],flag) # first argument shows that the next node is minimizer
                                                                                             # second argument shows the depth of the new node
                     if time.time() - t > 11.5 :
                         old_stdout = sys.stdout
@@ -310,11 +304,14 @@ class Player7:
                         value = temp_value
                         best_move = allowed_cell_list[i]
 
-                    alpha = max(alpha,temp_value) # updating value of alpha
+                    alpha = max(alpha,value) # updating value of alpha
 
                     if value > beta:  # no need to check further children
-                        break
-
+                        return (best_move[0],best_move[1])
+#                board[best_move[0]][best_move[1]] = flag
+#                block = self.update_block_list(old_move,board,block)
+#                for i in range(0,9,3):
+#                    print str(block[i])+' '+str(block[i+1])+' '+str(block[i+2])
                 return (best_move[0],best_move[1])
 
 
