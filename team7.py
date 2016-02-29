@@ -199,7 +199,7 @@ class Player7:
     
             allowed_cell_list = self.get_cell_list(allowed_block_list,board,block) # getting the cell list for the next move
             random.shuffle(allowed_cell_list)
-            if time_left <= 0.000180 :
+            if time_left <= 0.000200 or len(allowed_cell_list) ==0:
                 raju = self.utility_func(board,flag)
                 return raju
 #            if   height ==4: # if height is 4 we return the utility 
@@ -215,7 +215,6 @@ class Player7:
 #                print "return value    " + str(raju)
 #                raw_input("press enter to continue")
 #                return raju
-
 
             for i in range(len(allowed_cell_list)) :
 
@@ -305,13 +304,11 @@ class Player7:
                     alpha = max(alpha,value) # updating value of alpha
 
                     if value > beta:  # no need to check further children
-                        print time.time()-t
                         return (best_move[0],best_move[1])
 #                board[best_move[0]][best_move[1]] = flag
 #                block = self.update_block_list(old_move,board,block)
 #                for i in range(0,9,3):
 #                    print str(block[i])+' '+str(block[i+1])+' '+str(block[i+2])
-                print time.time()-t
                 return (best_move[0],best_move[1])
 
 
