@@ -118,7 +118,6 @@ class Player7:
 
 
         def utility_func(self,temp_board,flag) : # temprorary utility function
-
             board = copy.deepcopy(temp_board)
             if flag == 'x':
                 opponent = 'o'
@@ -153,11 +152,10 @@ class Player7:
             for i in range(8):
 #                 print str(list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])+str(' ') + str(i)
 #                 print "for  "+str(three_in_a_row[i][0]) + ' ' + str(three_in_a_row[i][1])+str(' ') + str(three_in_a_row[i][2])
-                maxi = max(maxi,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])
-                mini = min(mini,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])
-#                 ret = ret+ list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]]
-                 
-            return maxi+mini
+#                maxi = max(maxi,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])
+#                mini = min(mini,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])
+                 ret = ret+ list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]]
+            return ret
 
             
 
@@ -167,12 +165,9 @@ class Player7:
                     print str(li[i][j]) + ' ',
                 print
                     
-        def tree_func(self,max_or_min , height , alpha , beta , temp_board , temp_block , old_move, flag):
-
+        def tree_func(self,max_or_min , height , alpha , beta , temp_board , temp_block , old_move, flag,time_left):
             board = copy.deepcopy(temp_board) # initializing the board
             block = copy.deepcopy(temp_block) # initializing the block
-            
-
 
             if max_or_min == 0 :  # it is a min node and so our opponent
                 value = float("inf") 
@@ -203,9 +198,11 @@ class Player7:
             allowed_block_list = self.get_block_list(old_move)
     
             allowed_cell_list = self.get_cell_list(allowed_block_list,board,block) # getting the cell list for the next move
-
-
-            if  height == 4 : # if height is 4 we return the utility 
+            random.shuffle(allowed_cell_list)
+            if time_left <= 0.000180 :
+                raju = self.utility_func(board,flag)
+                return raju
+#            if   height ==4: # if height is 4 we return the utility 
 #                print "leaf"
 #                
 #                print old_move
@@ -214,10 +211,10 @@ class Player7:
 #                        print board[i][j],
 #                    print
 #
-                raju = self.utility_func(board,flag)
+#                raju = self.utility_func(board,flag)
 #                print "return value    " + str(raju)
 #                raw_input("press enter to continue")
-                return raju
+#                return raju
 
 
             for i in range(len(allowed_cell_list)) :
@@ -241,11 +238,11 @@ class Player7:
 #                raw_input("press enter to continue")
                 
                 if max_or_min == 0 :  # minimizer, so updating the best move correspondingly
-                        value = min(value,self.tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag))
+                        value = min(value,self.tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,time_left/float(len(allowed_cell_list))))
 
 
                 else : # maximizer , so updating the best move accordingly
-                        value = max(value,self.tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag))
+                        value = max(value,self.tree_func((max_or_min+1)%2 , height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,time_left/float(len(allowed_cell_list))))
 
                 if max_or_min == 0 : # a minimizer node and value < aplha no need to check children further 
                     if value < alpha :
@@ -268,7 +265,8 @@ class Player7:
             return value
 
 	def move(self,temp_board,temp_block,old_move,flag):
-                t = time.time()
+                global t
+                t= time.time()
                 board = copy.deepcopy(temp_board)
                 block = copy.deepcopy(temp_block)
                 allowed_block_list = self.get_block_list(old_move)
@@ -289,7 +287,7 @@ class Player7:
                         sys.stdout = old_stdout
                         log_file.close()
                         return (best_move[0],best_move[1])
-                    temp_value = self.tree_func(1,1,alpha,beta,board,block,allowed_cell_list[i],flag) # first argument shows that the next node is minimizer
+                    temp_value = self.tree_func(1,1,alpha,beta,board,block,allowed_cell_list[i],flag,11.5/float(len(allowed_cell_list))) # first argument shows that the next node is minimizer
                                                                                             # second argument shows the depth of the new node
                     if time.time() - t > 11.5 :
                         old_stdout = sys.stdout
@@ -307,11 +305,13 @@ class Player7:
                     alpha = max(alpha,value) # updating value of alpha
 
                     if value > beta:  # no need to check further children
+                        print time.time()-t
                         return (best_move[0],best_move[1])
 #                board[best_move[0]][best_move[1]] = flag
 #                block = self.update_block_list(old_move,board,block)
 #                for i in range(0,9,3):
 #                    print str(block[i])+' '+str(block[i+1])+' '+str(block[i+2])
+                print time.time()-t
                 return (best_move[0],best_move[1])
 
 
