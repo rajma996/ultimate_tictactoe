@@ -118,18 +118,14 @@ class Player7:
             return block
 
 
-        def utility_func(self,temp_board,flag) : 
+        def utility_func(self,temp_board,flag,block) : 
             board = copy.deepcopy(temp_board)
-#            for i in range(9):
-#                for j in range(9):
-#                    print board[i][j],
-#                print
             if flag == 'x':
                 opponent = 'o'
             else :
                 opponent = 'x'
             three_in_a_row = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,7]]
-            heuristic = [[0,-10,-100,-1000],[10,0,0,0],[100,0,0,0],[1000,0,0,0]]
+            heuristic = [[0,-1,-10,-100],[1,0,0,0],[10,0,0,0],[100,0,0,0]]
             list_block = []
             for i in range(9):
                 temp_score = 0
@@ -137,51 +133,46 @@ class Player7:
                 #print elements[0]
                 #print 'xx'
                 for j in range(8):
+                    if block[j] == flag :
+                        list_block.append(float(1))
+                        continue
+                    elif block[j] == opponent :
+                        list_block.append(float(-1))
+                        continue
                     my_piece = 0
                     opponent_piece = 0
                     for k in range(3):
                         piece = board[elements[three_in_a_row[j][k]][0]][elements[three_in_a_row[j][k]][1]]
-#                        print piece
                         if piece == flag :
                             my_piece = my_piece + 1
                         elif piece == opponent :
                             opponent_piece = opponent_piece + 1
-#                    print "block " + str(i)
-#                    print "three row  " + str(three_in_a_row[j])
-#                    print "pieces my  " + str(my_piece) + ' ' + str(opponent_piece) 
-#                    print "value " + str(heuristic[my_piece][opponent_piece])
                     temp_score += heuristic[my_piece][opponent_piece]
-#                print "final value for block " + str(i) + "is " + str(temp_score)
-                list_block.append(float(temp_score)) # max value a configuration can get is 1030
+                list_block.append(float(temp_score)/float(130)) # max score is 130
             
-#            for i in range(9) :
-#                print str(list_block[i])+' ',
-#            raw_input("press enter")
             maxi = -1*float("inf")
             mini = float("inf")
             ret = 0
             for i in range(8):
-#                 print str(list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])+str(' ') + str(i)
-#                 print "for  "+str(three_in_a_row[i][0]) + ' ' + str(three_in_a_row[i][1])+str(' ') + str(three_in_a_row[i][2])
 #                maxi = max(maxi,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])
 #                mini = min(mini,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])
-                 ret  =  ret + list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]]
-#                 if prob<=-3:
-#                    ret = ret -3 + (prob+3)*(10000-1000)
-#                 elif prob>-3 and prob<=-2:
-#                    ret = ret -2 + (prob+2)*(1000-100)
-#                 elif prob>-2 and prob<=-1:
-#                    ret = ret - 1 + (prob+1)*(100-10)
-#                 elif prob>-1 and prob<=0:
-#                    ret = ret + prob*(0+10)
-#                 elif prob > 0 and prob <= 1:
-#                    ret = ret + prob*(10-0)
-#                 elif prob>1 and prob<=2:
-#                    ret = ret + 1 + (prob-1)*(100-10)
-#                 elif prob> 2 and prob<=3:
-#                    ret = ret + 2 + (prob-2)*(1000-100)
-#                 elif prob>3:
-#                    ret = ret + 3 + (prob-3)*(10000-1000)
+                ret  = ret +  list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]]
+#                if prob<=-3:
+#                    ret = ret -3 + (prob+3)*(1000-100)
+#                elif prob>-3 and prob<=-2:
+#                    ret = ret -2 + (prob+2)*(100-10)
+#                elif prob>-2 and prob<=-1:
+#                    ret = ret - 1 + (prob+1)*(10-1)
+#                elif prob>-1 and prob<=0:
+#                    ret = ret + prob*(0+1)
+#                elif prob > 0 and prob <= 1:
+#                    ret = ret + prob*(1-0)
+#                elif prob>1 and prob<=2:
+#                    ret = ret + 1 + (prob-1)*(10-1)
+#                elif prob> 2 and prob<=3:
+#                    ret = ret + 2 + (prob-2)*(100-10)
+#                elif prob>3:
+#                    ret = ret + 3 + (prob-3)*(1000-100) 
             return ret
 
             
@@ -213,10 +204,11 @@ class Player7:
             allowed_cell_list = self.get_cell_list(allowed_block_list,board,block) # getting the cell list for the next move
             random.shuffle(allowed_cell_list)
             if time_left <= 0.000400 or len(allowed_cell_list) ==0:
-                raju = self.utility_func(board,flag)
+                print height
+                raju = self.utility_func(board,flag,block)
                 return raju
 #            if   height == 4: # if height is 4 we return the utility 
-#                raju = self.utility_func(board,flag)
+#                raju = self.utility_func(board,flag,block)
 #                return raju
 
             for i in range(len(allowed_cell_list)) :
@@ -269,10 +261,11 @@ class Player7:
                         sys.stdout = old_stdout
                         log_file.close()
                         return (best_move[0],best_move[1])
+
                     board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = flag
-                    temp_value = self.tree_func(0,1,alpha,beta,board,block,allowed_cell_list[i],flag,11.5/float(len(allowed_cell_list)+1)) # first argument shows that the next node is minimizer
+                    temp_value = self.tree_func(0,1,alpha,beta,board,block,allowed_cell_list[i],flag,11.5/float(len(allowed_cell_list)+1)) 
                     board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = '-'
-                                                                                            # second argument shows the depth of the new node
+
                     if time.time() - t > 11.5 :
                         old_stdout = sys.stdout
                         log_file = open("message.log","a")
@@ -281,7 +274,6 @@ class Player7:
                         sys.stdout = old_stdout
                         log_file.close()
                         return (best_move[0],best_move[1])
-                    #print allowed_cell_list[i], temp_value 
                     if temp_value > value : # next child having better value , so update the best move
                         value = temp_value
                         best_move = allowed_cell_list[i]
@@ -290,10 +282,6 @@ class Player7:
 
                     if value > beta:  # no need to check further children
                         return (best_move[0],best_move[1])
-#                board[best_move[0]][best_move[1]] = flag
-#                block = self.update_block_list(old_move,board,block)
-#                for i in range(0,9,3):
-#                    print str(block[i])+' '+str(block[i+1])+' '+str(block[i+2])
                 return (best_move[0],best_move[1])
 
 
