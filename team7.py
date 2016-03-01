@@ -133,12 +133,6 @@ class Player7:
                 #print elements[0]
                 #print 'xx'
                 for j in range(8):
-                    if block[j] == flag :
-                        list_block.append(float(1))
-                        continue
-                    elif block[j] == opponent :
-                        list_block.append(float(-1))
-                        continue
                     my_piece = 0
                     opponent_piece = 0
                     for k in range(3):
@@ -156,7 +150,7 @@ class Player7:
             for i in range(8):
 #                maxi = max(maxi,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])
 #                mini = min(mini,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])
-                ret  = ret +  list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]]
+                ret  = ret + ( list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])*2000
 #                if prob<=-3:
 #                    ret = ret -3 + (prob+3)*(1000-100)
 #                elif prob>-3 and prob<=-2:
@@ -204,7 +198,6 @@ class Player7:
             allowed_cell_list = self.get_cell_list(allowed_block_list,board,block) # getting the cell list for the next move
             random.shuffle(allowed_cell_list)
             if time_left <= 0.000400 or len(allowed_cell_list) ==0:
-                print height
                 raju = self.utility_func(board,flag,block)
                 return raju
 #            if   height == 4: # if height is 4 we return the utility 
