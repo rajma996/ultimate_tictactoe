@@ -211,7 +211,7 @@ class Player7:
                 return float("inf")
             elif winner == nflag :
                 return -1*float("inf")
-            if time_left <= 0.000400 or len(allowed_cell_list) ==0 or height >=8:
+            if time_left <= 0.000300 or len(allowed_cell_list) ==0 or height >=8:
                 raju = self.utility_func(board,flag,block)
                 return raju
 #            if   height == 4: # if height is 4 we return the utility 
@@ -241,7 +241,7 @@ class Player7:
                 if max_or_min == 0 : # a minimizer node , so updating the value of beta 
                     beta = min(beta,value)
                 else : # maximizer so upating the value of aplha
-                    aplha = max(alpha ,value) 
+                    alpha = max(alpha ,value) 
 
             return value
 
