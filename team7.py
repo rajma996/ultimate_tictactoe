@@ -96,7 +96,6 @@ class Player7:
             cell_list = self.get_cell_list_from_block(block_number) # Get All cells in the block where last move was played
             block = copy.deepcopy(temp_block)  
             board = copy.deepcopy(temp_board)
-            three_in_a_row = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,7]]
             for i in range(8):
                 cell1 = three_in_a_row[i][0]
                 cell2 = three_in_a_row[i][1]
@@ -124,7 +123,6 @@ class Player7:
                 opponent = 'o'
             else :
                 opponent = 'x'
-            three_in_a_row = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,7]]
             heuristic = [[0,-1,-10,-1000],[1,0,0,0],[10,0,0,0],[1000,0,0,0]]
             list_block = []
             for i in range(9):
@@ -178,6 +176,16 @@ class Player7:
                     print str(li[i][j]) + ' ',
                 print
                     
+
+        def check_terminal_state(self,board):
+            for i in range(len(three_in_a_row)):
+                if board[three_in_a_row[i][0]] == board[three_in_a_row[i][1]] == board[three_in_a_row[i][2]] == 'x':
+                    return 'x'
+
+                if board[three_in_a_row[i][0]] == board[three_in_a_row[i][1]] == board[three_in_a_row[i][2]] == 'o':
+                    return 'o'
+
+            return '-'
         def tree_func(self,max_or_min , height , alpha , beta , temp_board , temp_block , old_move, flag,time_left):
             board = copy.deepcopy(temp_board) # initializing the board
             block = copy.deepcopy(temp_block) # initializing the block
@@ -198,6 +206,11 @@ class Player7:
     
             allowed_cell_list = self.get_cell_list(allowed_block_list,board,block) # getting the cell list for the next move
             random.shuffle(allowed_cell_list)
+            winner = self.check_terminal_state(board)
+            if winner == flag :
+                return float("inf")
+            elif winner == nflag :
+                return -1*float("inf")
             if time_left <= 0.000400 or len(allowed_cell_list) ==0 or height >=8:
                 raju = self.utility_func(board,flag,block)
                 return raju
@@ -235,6 +248,8 @@ class Player7:
 	def move(self,temp_board,temp_block,old_move,flag):
                 global t
                 t= time.time()
+                global three_in_a_row
+                three_in_a_row = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,7]]
                 board = copy.deepcopy(temp_board)
                 block = copy.deepcopy(temp_block)
                 allowed_block_list = self.get_block_list(old_move)
