@@ -151,21 +151,21 @@ class Player7:
 #                ret  = ret + ( list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])*2000
                 prob = list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]]
                 if prob<=-3:
-                    ret = ret + ( -3 + (prob+3)*(1000-100)) *2000
+                    ret = ret + ( -3 + (prob+3)*(1000-10)) *2000
                 elif prob>-3 and prob<=-2:
-                    ret = ret +  ( -2 + (prob+2)*(100-10) )*2000
+                    ret = ret +  ( -2 + (prob+2)*(10-1) )*2000
                 elif prob>-2 and prob<=-1:
-                    ret = ret + ( - 1 + (prob+1)*(10-1))*2000
+                    ret = ret + ( - 1 + (prob+1)*(1-0))*2000
                 elif prob>-1 and prob<=0:
                     ret = ret + (prob*(0+1))*2000
                 elif prob > 0 and prob <= 1:
                     ret = ret +( prob*(1-0))*2000
                 elif prob>1 and prob<=2:
-                    ret = ret + (1 + (prob-1)*(10-1))*2000
+                    ret = ret + (1 + (prob-1)*(1-0))*2000
                 elif prob> 2 and prob<=3:
-                    ret = ret + (2 + (prob-2)*(100-10))*2000
+                    ret = ret + (2 + (prob-2)*(10-1))*2000
                 elif prob>3:
-                    ret = ret + (3 + (prob-3)*(1000-100) )*2000
+                    ret = ret + (3 + (prob-3)*(1000-10) )*2000
             return ret
 
             
