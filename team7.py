@@ -125,7 +125,7 @@ class Player7:
             else :
                 opponent = 'x'
             three_in_a_row = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,7]]
-            heuristic = [[0,-1,-10,-100],[1,0,0,0],[10,0,0,0],[100,0,0,0]]
+            heuristic = [[0,-1,-10,-1000],[1,0,0,0],[10,0,0,0],[1000,0,0,0]]
             list_block = []
             for i in range(9):
                 temp_score = 0
@@ -142,7 +142,7 @@ class Player7:
                         elif piece == opponent :
                             opponent_piece = opponent_piece + 1
                     temp_score += heuristic[my_piece][opponent_piece]
-                list_block.append(float(temp_score)/float(130)) # max score is 130
+                list_block.append(float(temp_score)/float(1000)) # max score is 130
             
             maxi = -1*float("inf")
             mini = float("inf")
@@ -150,23 +150,24 @@ class Player7:
             for i in range(8):
 #                maxi = max(maxi,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])
 #                mini = min(mini,list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])
-                ret  = ret + ( list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])*2000
-#                if prob<=-3:
-#                    ret = ret -3 + (prob+3)*(1000-100)
-#                elif prob>-3 and prob<=-2:
-#                    ret = ret -2 + (prob+2)*(100-10)
-#                elif prob>-2 and prob<=-1:
-#                    ret = ret - 1 + (prob+1)*(10-1)
-#                elif prob>-1 and prob<=0:
-#                    ret = ret + prob*(0+1)
-#                elif prob > 0 and prob <= 1:
-#                    ret = ret + prob*(1-0)
-#                elif prob>1 and prob<=2:
-#                    ret = ret + 1 + (prob-1)*(10-1)
-#                elif prob> 2 and prob<=3:
-#                    ret = ret + 2 + (prob-2)*(100-10)
-#                elif prob>3:
-#                    ret = ret + 3 + (prob-3)*(1000-100) 
+#                ret  = ret + ( list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])*2000
+                prob = list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]]
+                if prob<=-3:
+                    ret = ret + ( -3 + (prob+3)*(1000-100)) *2000
+                elif prob>-3 and prob<=-2:
+                    ret = ret +  ( -2 + (prob+2)*(100-10) )*2000
+                elif prob>-2 and prob<=-1:
+                    ret = ret + ( - 1 + (prob+1)*(10-1))*2000
+                elif prob>-1 and prob<=0:
+                    ret = ret + (prob*(0+1))*2000
+                elif prob > 0 and prob <= 1:
+                    ret = ret +( prob*(1-0))*2000
+                elif prob>1 and prob<=2:
+                    ret = ret + (1 + (prob-1)*(10-1))*2000
+                elif prob> 2 and prob<=3:
+                    ret = ret + (2 + (prob-2)*(100-10))*2000
+                elif prob>3:
+                    ret = ret + (3 + (prob-3)*(1000-100) )*2000
             return ret
 
             
@@ -197,7 +198,7 @@ class Player7:
     
             allowed_cell_list = self.get_cell_list(allowed_block_list,board,block) # getting the cell list for the next move
             random.shuffle(allowed_cell_list)
-            if time_left <= 0.000400 or len(allowed_cell_list) ==0:
+            if time_left <= 0.000400 or len(allowed_cell_list) ==0 or height >=8:
                 raju = self.utility_func(board,flag,block)
                 return raju
 #            if   height == 4: # if height is 4 we return the utility 
@@ -208,13 +209,13 @@ class Player7:
                 
                 if max_or_min == 0 :  # minimizer, so updating the best move correspondingly
                         board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = nflag
-                        value = min(value,self.tree_func(1,height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,time_left/float(len(allowed_cell_list)+1)))
+                        value = min(value,self.tree_func(1,height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,time_left/float(len(allowed_cell_list)+2)))
                         board[allowed_cell_list[i][0]][allowed_cell_list[i][1]]='-'
 
 
                 else : # maximizer , so updating the best move accordingly
                         board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = flag
-                        value = max(value,self.tree_func(0,height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,time_left/float(len(allowed_cell_list)+1)))
+                        value = max(value,self.tree_func(0,height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,time_left/float(len(allowed_cell_list)+2)))
                         board[allowed_cell_list[i][0]][allowed_cell_list[i][1]]='-'
 
                 if max_or_min == 0 : # a minimizer node and value < aplha no need to check children further 
