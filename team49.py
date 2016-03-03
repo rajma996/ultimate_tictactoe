@@ -345,7 +345,6 @@ def update_lists(game_board, block_stat, move_ret, fl):
 
 
 def max_play(prev_move, game_board, depth, block_status, playerFlag,alpha,beta):
-
 	bs = copy.deepcopy(block_status)
 	opp = getOpponent(playerFlag)
 	bs = update_lists(game_board, bs, prev_move, opp)

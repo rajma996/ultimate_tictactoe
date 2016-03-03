@@ -22,6 +22,7 @@ def test_update_block_list_function():
         board[0+6][0+6] = 'x';board[0+6][1+6] = 'o';board[0+6][2+6] = 'x';
         board[1+6][0+6] = 'o';board[1+6][1+6] = 'x';board[1+6][2+6] = 'o';        
         board[2+6][0+6] = 'o';board[2+6][1+6] = 'o';board[2+6][2+6] = 'x';
+
         ans = p.get_utility_block(board,8,flag)
         print ans
 

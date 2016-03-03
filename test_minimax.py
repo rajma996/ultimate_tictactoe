@@ -1,4 +1,5 @@
 from team7 import Player7
+from team49 import Player49
 import time
 
 def test_minimax():

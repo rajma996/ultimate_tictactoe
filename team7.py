@@ -13,6 +13,7 @@ class Player7:
 
 	def __init__(self):
 		''' Variables Declared Here '''
+                self.count = 0 
 		pass
 
 
@@ -196,6 +197,7 @@ class Player7:
 
             return '-'
         def tree_func(self,max_or_min , height , alpha , beta , temp_board , temp_block , old_move, flag,time_left):
+            self.count = self.count + 1
             board = copy.deepcopy(temp_board) # initializing the board
             block = copy.deepcopy(temp_block) # initializing the block
             if flag == 'x':
@@ -219,24 +221,28 @@ class Player7:
                 return float("inf")
             elif winner == nflag :
                 return -1*float("inf")
-            if time_left <= 0.000400 or len(allowed_cell_list) ==0 or height >=8:
+            if time_left <= 0.000200 or len(allowed_cell_list) ==0 :
                 raju = self.utility_func(board,flag,block)
                 return raju
 #            if   height == 4: # if height is 4 we return the utility 
 #                raju = self.utility_func(board,flag,block)
 #                return raju
-
+            time_utilized = 0
             for i in range(len(allowed_cell_list)) :
                 
                 if max_or_min == 0 :  # minimizer, so updating the best move correspondingly
                         board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = nflag
-                        value = min(value,self.tree_func(1,height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,time_left/float(len(allowed_cell_list)+2)))
+                        t1 = time.time()
+                        value = min(value,self.tree_func(1,height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,(time_left-time_utilized)/float(len(allowed_cell_list)+2)))
+                        time_utilized = time_utilized + time.time() - t1 
                         board[allowed_cell_list[i][0]][allowed_cell_list[i][1]]='-'
 
 
                 else : # maximizer , so updating the best move accordingly
                         board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = flag
-                        value = max(value,self.tree_func(0,height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,time_left/float(len(allowed_cell_list)+2)))
+                        t1 = time.time()
+                        value = max(value,self.tree_func(0,height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,(time_left-time_utilized)/float(len(allowed_cell_list)+2)))
+                        time_utilized = time_utilized + time.time() - t1
                         board[allowed_cell_list[i][0]][allowed_cell_list[i][1]]='-'
 
                 if max_or_min == 0 : # a minimizer node and value < aplha no need to check children further 
@@ -269,6 +275,7 @@ class Player7:
                 value = -1*float("inf")     # initial value for the root node 
                 alpha = -1*float("inf")  # initial alpha value for the root node 
                 beta = float("inf")      # initial beta value for the root node
+                time_utilized = 0
                 for i in range(len(allowed_cell_list)):
                     if time.time() - t > 11.5 :
                         old_stdout = sys.stdout
@@ -280,7 +287,9 @@ class Player7:
                         return (best_move[0],best_move[1])
 
                     board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = flag
-                    temp_value = self.tree_func(0,1,alpha,beta,board,block,allowed_cell_list[i],flag,11.5/float(len(allowed_cell_list)+1)) 
+                    t1 = time.time()
+                    temp_value = self.tree_func(0,1,alpha,beta,board,block,allowed_cell_list[i],flag,(11.5-time_utilized)/float(len(allowed_cell_list)+1))
+                    time_utilized  =  time_utilized + time.time()-t1
                     board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = '-'
 
                     if time.time() - t > 11.5 :
@@ -299,6 +308,7 @@ class Player7:
 
                     if value > beta:  # no need to check further children
                         return (best_move[0],best_move[1])
+                print self.count
                 return (best_move[0],best_move[1])
 
 
