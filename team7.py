@@ -197,7 +197,6 @@ class Player7:
 
             return '-'
         def tree_func(self,max_or_min , height , alpha , beta , temp_board , temp_block , old_move, flag,time_left):
-            self.count = self.count + 1
             board = copy.deepcopy(temp_board) # initializing the board
             block = copy.deepcopy(temp_block) # initializing the block
             if flag == 'x':
@@ -233,7 +232,7 @@ class Player7:
                 if max_or_min == 0 :  # minimizer, so updating the best move correspondingly
                         board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = nflag
                         t1 = time.time()
-                        value = min(value,self.tree_func(1,height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,(time_left-time_utilized)/float(len(allowed_cell_list)+2)))
+                        value = min(value,self.tree_func(1,height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,(time_left-time_utilized)/float(len(allowed_cell_list)-i)))
                         time_utilized = time_utilized + time.time() - t1 
                         board[allowed_cell_list[i][0]][allowed_cell_list[i][1]]='-'
 
@@ -241,7 +240,7 @@ class Player7:
                 else : # maximizer , so updating the best move accordingly
                         board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = flag
                         t1 = time.time()
-                        value = max(value,self.tree_func(0,height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,(time_left-time_utilized)/float(len(allowed_cell_list)+2)))
+                        value = max(value,self.tree_func(0,height+1,alpha,beta,board ,block,allowed_cell_list[i],flag,(time_left-time_utilized)/float(len(allowed_cell_list)-i)))
                         time_utilized = time_utilized + time.time() - t1
                         board[allowed_cell_list[i][0]][allowed_cell_list[i][1]]='-'
 
@@ -288,7 +287,7 @@ class Player7:
 
                     board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = flag
                     t1 = time.time()
-                    temp_value = self.tree_func(0,1,alpha,beta,board,block,allowed_cell_list[i],flag,(11.5-time_utilized)/float(len(allowed_cell_list)+1))
+                    temp_value = self.tree_func(0,1,alpha,beta,board,block,allowed_cell_list[i],flag,(11.5-time_utilized)/float(len(allowed_cell_list)-i))
                     time_utilized  =  time_utilized + time.time()-t1
                     board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = '-'
 
@@ -308,7 +307,6 @@ class Player7:
 
                     if value > beta:  # no need to check further children
                         return (best_move[0],best_move[1])
-                print self.count
                 return (best_move[0],best_move[1])
 
 
