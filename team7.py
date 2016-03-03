@@ -6,14 +6,12 @@ first we find out which cells are valid '''
 
 import random
 import time
-import sys
 import copy
 
 class Player7:
 
 	def __init__(self):
 		''' Variables Declared Here '''
-                self.count = 0 
 		pass
 
 
@@ -138,8 +136,6 @@ class Player7:
                     continue
                 temp_score = 0
                 elements = self.get_cell_list_from_block(i)
-                #print elements[0]
-                #print 'xx'
                 for j in range(8):
                     my_piece = 0
                     opponent_piece = 0
@@ -276,28 +272,16 @@ class Player7:
                 beta = float("inf")      # initial beta value for the root node
                 time_utilized = 0
                 for i in range(len(allowed_cell_list)):
-                    if time.time() - t > 11.5 :
-                        old_stdout = sys.stdout
-                        log_file = open("message.log","a")
-                        sys.stdout = log_file
-                        print "Returned due to lack of time, Best Move is",best_move[0],best_move[1]
-                        sys.stdout = old_stdout
-                        log_file.close()
+                    if time.time() - t > 11.9 :
                         return (best_move[0],best_move[1])
 
                     board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = flag
                     t1 = time.time()
-                    temp_value = self.tree_func(0,1,alpha,beta,board,block,allowed_cell_list[i],flag,(11.5-time_utilized)/float(len(allowed_cell_list)-i))
+                    temp_value = self.tree_func(0,1,alpha,beta,board,block,allowed_cell_list[i],flag,(11.8-time_utilized)/float(len(allowed_cell_list)-i))
                     time_utilized  =  time_utilized + time.time()-t1
                     board[allowed_cell_list[i][0]][allowed_cell_list[i][1]] = '-'
 
-                    if time.time() - t > 11.5 :
-                        old_stdout = sys.stdout
-                        log_file = open("message.log","a")
-                        sys.stdout = log_file
-                        print "Returned due to lack of time, Best Move is",best_move[0],best_move[1]
-                        sys.stdout = old_stdout
-                        log_file.close()
+                    if time.time() - t > 11.9 :
                         return (best_move[0],best_move[1])
                     if temp_value > value : # next child having better value , so update the best move
                         value = temp_value
