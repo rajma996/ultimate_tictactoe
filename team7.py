@@ -123,9 +123,18 @@ class Player7:
                 opponent = 'o'
             else :
                 opponent = 'x'
-            heuristic = [[0,-1,-10,-1000],[1,0,0,0],[10,0,0,0],[1000,0,0,0]]
+            heuristic = [[0,-10,-100,-1000],[10,0,50,0],[100,-50,0,0],[1000,0,0,0]]
             list_block = []
             for i in range(9):
+                if block[i]==flag :
+                    list_block.append(1)
+                    continue
+                elif block[i]==opponent:
+                    list_block.append(-1)
+                    continue
+                elif block[i]=='D':
+                    list_block.append(0)
+                    continue
                 temp_score = 0
                 elements = self.get_cell_list_from_block(i)
                 #print elements[0]
@@ -151,21 +160,21 @@ class Player7:
 #                ret  = ret + ( list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]])*2000
                 prob = list_block[three_in_a_row[i][0]]+list_block[three_in_a_row[i][1]]+list_block[three_in_a_row[i][2]]
                 if prob<=-3:
-                    ret = ret + ( -3 + (prob+3)*(1000-10)) *2000
+                    ret = ret + ( -3 + (prob+3)*(10000-1000))
                 elif prob>-3 and prob<=-2:
-                    ret = ret +  ( -2 + (prob+2)*(10-1) )*2000
+                    ret = ret +  ( -2 + (prob+2)*(1000-100) )
                 elif prob>-2 and prob<=-1:
-                    ret = ret + ( - 1 + (prob+1)*(1-0))*2000
+                    ret = ret + ( - 1 + (prob+1)*(100-10))
                 elif prob>-1 and prob<=0:
-                    ret = ret + (prob*(0+1))*2000
+                    ret = ret + (prob*(0+10))
                 elif prob > 0 and prob <= 1:
-                    ret = ret +( prob*(1-0))*2000
+                    ret = ret +( prob*(10-0))
                 elif prob>1 and prob<=2:
-                    ret = ret + (1 + (prob-1)*(1-0))*2000
+                    ret = ret + (1 + (prob-1)*(100-10))
                 elif prob> 2 and prob<=3:
-                    ret = ret + (2 + (prob-2)*(10-1))*2000
+                    ret = ret + (2 + (prob-2)*(1000-100))
                 elif prob>3:
-                    ret = ret + (3 + (prob-3)*(1000-10) )*2000
+                    ret = ret + (3 + (prob-3)*(10000-1000) )
             return ret
 
             
@@ -205,13 +214,12 @@ class Player7:
             allowed_block_list = self.get_block_list(old_move)
     
             allowed_cell_list = self.get_cell_list(allowed_block_list,board,block) # getting the cell list for the next move
-            random.shuffle(allowed_cell_list)
             winner = self.check_terminal_state(board)
             if winner == flag :
                 return float("inf")
             elif winner == nflag :
                 return -1*float("inf")
-            if time_left <= 0.000300 or len(allowed_cell_list) ==0 or height >=8:
+            if time_left <= 0.000400 or len(allowed_cell_list) ==0 or height >=8:
                 raju = self.utility_func(board,flag,block)
                 return raju
 #            if   height == 4: # if height is 4 we return the utility 
@@ -249,7 +257,7 @@ class Player7:
                 global t
                 t= time.time()
                 global three_in_a_row
-                three_in_a_row = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,7]]
+                three_in_a_row = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
                 board = copy.deepcopy(temp_board)
                 block = copy.deepcopy(temp_block)
                 allowed_block_list = self.get_block_list(old_move)

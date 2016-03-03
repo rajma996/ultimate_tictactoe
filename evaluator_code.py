@@ -19,8 +19,9 @@ import signal
 from team7 import Player7
 from team76 import Player76
 from team3 import Player3 
-from team4v import Player4 
+from team4 import Player4 
 from team30 import Player30
+from team49 import Player49
 
 class TimedOutExc(Exception):
         pass
