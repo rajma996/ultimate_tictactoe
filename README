@@ -1,6 +1,7 @@
-We are confused at the moment about how the assignemnt is to be done.
+This repository contains a bot for modified version of game ultimate tictactoe.
+Use method move in file team7.py to get the next move.
 
-where and how to import the other competitor's file and if we need to build the code from scratch
+Sample evaluator code in added as well.
+Import other bots here and have a great tournament. :D
 
-if we just need to import the complete evaluator.py file including all the classes and the functions, then we don't have method to 
-know who won the toss
+Cheers !
